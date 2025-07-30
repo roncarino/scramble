@@ -149,10 +149,8 @@ class TypeTransformer
                     $openApiType->default($default[0]);
                 }
 
-                dump(ExamplesExtractor::make($docNode, '@readonly'));
-                die;
                 if ($readonly = ExamplesExtractor::make($docNode, '@readonly')->extract(preferString: $openApiType instanceof BooleanType)) {
-                    $openApiType->readonly($readonly[0]);
+                    $openApiType->readonly((bool) $readonly[0]);
                 }
 
                 if ($format = array_values($docNode->getTagsByName('@format'))[0]->value->value ?? null) {
