@@ -34,7 +34,8 @@ abstract class Type
 
     public bool $nullable = false;
 
-    public bool $readonly = false;
+    /** @var bool|null|MissingValue */
+    public $readOnly;
 
     public function __construct(string $type)
     {
@@ -56,9 +57,9 @@ abstract class Type
     /**
      * @return $this
      */
-    public function readonly(bool $readonly): self
+    public function readOnly(bool $readOnly): self
     {
-        $this->readonly = $readonly;
+        $this->readOnly = $readOnly;
 
         return $this;
     }
@@ -101,7 +102,6 @@ abstract class Type
         $this->attributes = $fromType->attributes;
 
         $this->nullable = $fromType->nullable;
-        $this->readonly = $fromType->readonly;
         $this->enum = $fromType->enum;
         $this->description = $fromType->description;
         $this->example = $fromType->example;
@@ -123,6 +123,7 @@ abstract class Type
             ]),
             $this->example instanceof MissingValue ? [] : ['example' => $this->example],
             $this->default instanceof MissingValue ? [] : ['default' => $this->default],
+            $this->readOnly instanceof MissingValue ? [] : ['readOnly' => $this->readOnly],
             count(
                 $examples = collect($this->examples)
                     ->reject(fn ($example) => $example instanceof MissingValue)
